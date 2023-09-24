@@ -1,0 +1,19 @@
+.session-nav{
+    list-style-type: none;
+    display: flex; 
+}
+
+
+.session-nav li{
+    padding: 14px 20px;
+}
+
+.session-nav a{
+    text-decoration: none;
+    color: white;
+}
+
+.session-nav a:hover{
+    background-color: #444; /* Slightly lighter than the navbar background */  
+
+}

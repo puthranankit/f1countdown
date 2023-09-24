@@ -10,11 +10,11 @@ export interface Race {
   }
   
   export interface Sessions {
-    fp1: string
-    fp2?: string
-    fp3?: string
-    qualifying: string
-    gp: string
-    sprintQualifying?: string
-    sprint?: string
+    fp1: Date
+    fp2?: Date
+    fp3?: Date
+    qualifying: Date
+    gp: Date
+    sprintQualifying?: Date
+    sprint?: Date
   }

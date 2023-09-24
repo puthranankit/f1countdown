@@ -1,7 +1,26 @@
-import React from "react";
+import { Race } from "../types/race";
+import "./Upcoming.css";
 
-const Upcoming = () => {
-  return <div>Upcoming Races</div>;
+interface Props {
+  races: Race[];
+}
+const Upcoming = ({ races }: Props) => {
+  const currentDate = new Date();
+
+  const nextRaces = races.filter((race) => {
+    const raceDate = new Date(race.sessions.gp);
+    return raceDate.getTime() > currentDate.getTime();
+  });
+
+  return (
+    <div className="upcoming">
+      <ul>
+        {nextRaces.map((race) => (
+          <li key={race.round}>{race.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
 };
 
 export default Upcoming;

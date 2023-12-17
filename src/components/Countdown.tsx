@@ -1,21 +1,21 @@
 import { useState, useEffect } from "react";
 import { Race } from "../types/race";
 import "./Countdown.css";
+import Timer from "./Timer/Timer";
 
 interface Props {
-  races: Race[];
+  race: Race | undefined;
 }
 
-const Countdown = ({ races }: Props) => {
-  const [selectedRace, setSelectedRace] = useState<Race>();
+const Countdown = ({ race }: Props) => {
   const [timeLeft, setTimeLeft] = useState<{ [key: string]: number } | null>(
     null
   );
 
   useEffect(() => {
-    if (selectedRace) {
+    if (race) {
       const timerId = setInterval(() => {
-        const endTime = selectedRace.sessions.gp;
+        const endTime = race.sessions.gp;
         const difference = new Date(endTime).getTime() - new Date().getTime();
         if (difference > 0) {
           setTimeLeft({
@@ -31,73 +31,65 @@ const Countdown = ({ races }: Props) => {
       }, 1000);
       return () => clearInterval(timerId);
     }
-  }, [selectedRace]);
-
-  const handleRaceSelect = (raceName: string) => {
-    const selectRace = races.find((race) => race.name === raceName);
-    setSelectedRace(selectRace);
-  };
+  }, []);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <select
-        onChange={(e) => handleRaceSelect(e.target.value)}
-        name="raceNames"
-        id="raceNames"
+    <div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
       >
-        {races.map((race) => (
-          <option key={race.localeKey} value={race.name}>
-            {race.name}
-          </option>
-        ))}
-      </select>
-      <nav>
-        <ul className="session-nav">
-          <li>
-            <a>FP1</a>
-          </li>
-          <li>
-            <a>FP2</a>
-          </li>
-          <li>
-            <a>FP3</a>
-          </li>
-          <li>
-            <a>QUALI</a>
-          </li>
-          <li>
-            <a>RACE</a>
-          </li>
-        </ul>
-      </nav>
-      {selectedRace && (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <div>GP : {selectedRace.name}</div>
-          {timeLeft ? (
-            <div>
-              <div></div>
+        <nav>
+          <ul className="session-nav">
+            <li>
+              <a>FP1</a>
+            </li>
+            <li>
+              <a>FP2</a>
+            </li>
+            <li>
+              <a>FP3</a>
+            </li>
+            <li>
+              <a>QUALI</a>
+            </li>
+            <li>
+              <a>RACE</a>
+            </li>
+          </ul>
+        </nav>
+        {race && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <div>{race.name} Grand Prix</div>
+            {timeLeft ? (
               <div>
-                Time Left: {timeLeft.days} days {timeLeft.hours} hours{" "}
-                {timeLeft.minutes} minutes {timeLeft.seconds} seconds
+                <div></div>
+                <div>
+                  <Timer
+                    days={timeLeft.days}
+                    hours={timeLeft.hours}
+                    minutes={timeLeft.minutes}
+                    seconds={timeLeft.seconds}
+                  />
+                </div>
               </div>
-            </div>
-          ) : (
-            <div>Race has ended</div>
-          )}
-        </div>
-      )}
+            ) : (
+              <div>
+                <Timer days={0} hours={0} minutes={0} seconds={0} />
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

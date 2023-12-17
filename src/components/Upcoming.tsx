@@ -15,7 +15,7 @@ const Upcoming = ({ races }: Props) => {
   return (
     <div className="upcoming">
       <ul>
-        {nextRaces.map((race) => (
+        {nextRaces.slice(1, 4).map((race) => (
           <li key={race.round}>{race.name}</li>
         ))}
       </ul>

@@ -17,3 +17,13 @@
     background-color: #444; /* Slightly lighter than the navbar background */  
 
 }
+
+
+.countdown-number-tile {
+    align-items: center;
+    width: 150px;
+    height: 150px;
+    background-color: grey;
+    border: 10px  red;
+}
+

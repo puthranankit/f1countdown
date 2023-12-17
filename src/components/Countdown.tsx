@@ -1,48 +1,95 @@
-import React, { useEffect, useState } from "react";
-import { getAllEvents } from "../data/data";
+import { useState, useEffect } from "react";
 import { Race } from "../types/race";
+import "./Countdown.css";
+import Timer from "./Timer/Timer";
 
-const Countdown = () => {
-  const [races, setRaces] = useState<Race[]>();
-  const [selectedRace, setSelectedRace] = useState<Race>();
+interface Props {
+  race: Race | undefined;
+}
+
+const Countdown = ({ race }: Props) => {
+  const [timeLeft, setTimeLeft] = useState<{ [key: string]: number } | null>(
+    null
+  );
 
   useEffect(() => {
-    async function fetchData() {
-      // You can await here
-      const races = await getAllEvents("f1");
-      console.log(races);
-      setRaces(races);
-      console.log(races);
+    if (race) {
+      const timerId = setInterval(() => {
+        const endTime = race.sessions.gp;
+        const difference = new Date(endTime).getTime() - new Date().getTime();
+        if (difference > 0) {
+          setTimeLeft({
+            days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+            hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+            minutes: Math.floor((difference / 1000 / 60) % 60),
+            seconds: Math.floor((difference / 1000) % 60),
+          });
+        } else {
+          setTimeLeft(null);
+          clearInterval(timerId);
+        }
+      }, 1000);
+      return () => clearInterval(timerId);
     }
-    fetchData();
-  }, []); // Or [] if effect doesn't need props or state
-
-  const handleRaceSelect = (race: string) => {
-    const selectRace = races?.filter((i) => i.name === race)[0];
-    if (selectRace) {
-      setSelectedRace(selectRace);
-    }
-  };
+  }, []);
 
   return (
     <div>
-      <select
-        onChange={(e) => handleRaceSelect(e.target.value)}
-        name="raceNames"
-        id="raceNames"
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
       >
-        {races?.map((race) => (
-          <option key={race.localeKey} value={race.name}>
-            {race.name}
-          </option>
-        ))}
-      </select>
-      {selectedRace && (
-        <div>
-          <div>GP : {selectedRace.name}</div>
-          <div>Race Date : {selectedRace.sessions.gp}</div>
-        </div>
-      )}
+        <nav>
+          <ul className="session-nav">
+            <li>
+              <a>FP1</a>
+            </li>
+            <li>
+              <a>FP2</a>
+            </li>
+            <li>
+              <a>FP3</a>
+            </li>
+            <li>
+              <a>QUALI</a>
+            </li>
+            <li>
+              <a>RACE</a>
+            </li>
+          </ul>
+        </nav>
+        {race && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <div>{race.name} Grand Prix</div>
+            {timeLeft ? (
+              <div>
+                <div></div>
+                <div>
+                  <Timer
+                    days={timeLeft.days}
+                    hours={timeLeft.hours}
+                    minutes={timeLeft.minutes}
+                    seconds={timeLeft.seconds}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div>
+                <Timer days={0} hours={0} minutes={0} seconds={0} />
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

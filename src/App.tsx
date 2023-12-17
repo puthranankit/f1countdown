@@ -1,14 +1,18 @@
 import "./App.css";
-import Countdown from "./components/Countdown";
-import Navigation from "./components/Navigation";
-import Upcoming from "./components/Upcoming";
+import LandingPage from "./components/LandingPage/LandingPage";
 
 function App() {
   return (
-    <div className="container">
-      <Navigation />
-      <Countdown />
-      <Upcoming />
+    <div
+      className="bg-black 
+    text-white
+     w-full 
+     h-screen 
+     flex 
+     flex-col 
+     items-center"
+    >
+      <LandingPage></LandingPage>
     </div>
   );
 }

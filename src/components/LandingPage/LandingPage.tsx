@@ -5,10 +5,13 @@ import Upcoming from "../Upcoming";
 import { getAllEvents } from "../../data/data";
 import { Race } from "../../types/race";
 import RaceCarousel from "../RaceCarousel";
+import { Header } from "../Header/Header";
+import { useRaceContext } from "../../contexts/RaceContext";
 
 const LandingPage: React.FC = () => {
   const [races, setRaces] = useState<Race[]>([]);
-  const [selectedRace, setSelectedRace] = useState<Race | undefined>();
+
+  const { race } = useRaceContext();
 
   useEffect(() => {
     async function fetchData() {
@@ -19,17 +22,22 @@ const LandingPage: React.FC = () => {
     fetchData();
   }, []);
 
+  const handleRaceSelect = (race: Race) => {
+    console.log(race);
+  };
+
   return (
-    <div>
-      <h1 className="text-7xl">F1 Countdown</h1>
-      {races && (
-        <RaceCarousel
-          races={races}
-          onRaceSelect={(race) => setSelectedRace(race)}
-        />
-      )}
-      <Countdown race={selectedRace} />
-      <Upcoming races={races} />
+    <div className="flex flex-col w-screen h-screen">
+      <Header />
+
+      <div className="flex-grow">
+        {races && (
+          <RaceCarousel races={races} onRaceSelect={handleRaceSelect} />
+        )}
+        <Countdown race={race} />
+        <Upcoming races={races} />
+      </div>
+
       <Footer />
     </div>
   );

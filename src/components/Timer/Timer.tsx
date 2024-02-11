@@ -15,7 +15,7 @@ const Timer: React.FC<TimerProps> = ({ days, hours, minutes, seconds }) => {
   const renderTimeBlock = (time: number, label: string) => {
     return (
       <div className="flex flex-col items-center">
-        <div className="p-4 text-6xl">{formatTime(time)}</div>
+        <div className="p-4 text-9xl">{formatTime(time)}</div>
         <div>{label}</div>
       </div>
     );

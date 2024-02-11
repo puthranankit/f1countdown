@@ -31,7 +31,7 @@ const Countdown = ({ race }: Props) => {
       }, 1000);
       return () => clearInterval(timerId);
     }
-  }, []);
+  }, [race?.name]);
 
   return (
     <div>
@@ -69,7 +69,6 @@ const Countdown = ({ race }: Props) => {
               alignItems: "center",
             }}
           >
-            <div>{race.name} Grand Prix</div>
             {timeLeft ? (
               <div>
                 <div></div>

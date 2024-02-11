@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Race } from "../types/race";
 import { BsArrowLeftCircleFill, BsArrowRightCircleFill } from "react-icons/bs";
+import { useRaceContext } from "../contexts/RaceContext";
 
 type RaceCarouselProps = {
   races: Race[];
@@ -9,8 +10,7 @@ type RaceCarouselProps = {
 
 const RaceCarousel = ({ races, onRaceSelect }: RaceCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  console.log(races);
+  const { setRace } = useRaceContext();
 
   const handleForwardClick = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % races.length);
@@ -23,15 +23,27 @@ const RaceCarousel = ({ races, onRaceSelect }: RaceCarouselProps) => {
   };
 
   useEffect(() => {
+    const nextRace: Race | undefined = races.find(
+      (race) => race.sessions.gp > new Date()
+    );
+
+    if (nextRace) setRace(nextRace);
+  }, []);
+
+  useEffect(() => {
     onRaceSelect(races[currentIndex]);
+    setRace(races[currentIndex]);
+    // setSelectedRace(races[currentIndex]);
   }, [currentIndex]);
 
   return (
-    <div className="flex justify-between w-full p-6">
+    <div className="flex justify-between m-8">
       <button onClick={handleBackwardClick}>
         <BsArrowLeftCircleFill size={40} />
       </button>
-      <h1 className="text-4xl font-bold">{races[currentIndex]?.name}</h1>
+      <h1 className="text-4xl font-bold w-80 text-center">
+        {races[currentIndex]?.name}
+      </h1>
       <button onClick={handleForwardClick}>
         <BsArrowRightCircleFill size={40} />
       </button>
